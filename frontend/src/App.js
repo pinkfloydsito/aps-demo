@@ -1,25 +1,30 @@
 import React from 'react';
 import logo from './logo.svg';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+import { ApolloProvider } from '@apollo/react-hooks';
+import client from './apolloClient';
+import APSDropZone from './components/APSDropZone'
+import Nav from './components/Nav'
 import './App.css';
 
-function App() {
+const theme = createMuiTheme({
+  typography: {
+    htmlFontSize: 10,
+    useNextVariants: true,
+  },
+});
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  <ApolloProvider client={client}>
+    <MuiThemeProvider theme={theme}>
+      <div className="App">
+        <Nav/>
+        <APSDropZone />
+      </div>
+    </MuiThemeProvider>
+  </ApolloProvider>
   );
 }
 

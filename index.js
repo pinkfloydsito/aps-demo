@@ -1,9 +1,11 @@
 const express = require('express');
-const graphqlHTTP = require('express-graphql');
-const schema = require('./schema/schema')
+const { ApolloServer, gql } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./schema/schema');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+var cors = require('cors')
 
+const apolloServer = new ApolloServer({ typeDefs, resolvers });
 const app = express();
 require('dotenv').config();
 
@@ -20,15 +22,15 @@ mongoose.connection.once('open', () => {
     console.log('conneted to database');
 });
 
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.text({ type: 'application/graphql' }));
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql:true,
-}));
+app.use('/static', express.static('files'));
+// app.use(express.static(__dirname + '/files'));
+
+apolloServer.applyMiddleware({ app });
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 }); 
-

@@ -5,6 +5,9 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import {
+  STATIC_URL
+} from '../utils/variables';
 
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
@@ -64,9 +67,9 @@ export default function ImageGrid({ saved, setSaved }) {
       <GridList className={classes.gridList}
                 spacing={15} cellHeight={400}
                 cols={2.5}>
-        {images.map((tile) => (
-          <GridListTile key={tile.filename}>
-            <img src={`http://localhost:5000/static/${tile.filename}`} alt={tile.filename} />
+        {images.map((tile, i) => (
+          <GridListTile key={i}>
+            <img src={`${STATIC_URL}${tile.filename}`} alt={tile.filename} />
             <GridListTileBar
               title={tile.filename}
               classes={{

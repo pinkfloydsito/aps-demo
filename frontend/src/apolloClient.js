@@ -5,12 +5,15 @@ import {
   HttpLink
 } from "@apollo/client";
 import { createUploadLink } from 'apollo-upload-client'
+import {
+  GRAPHQL_URL
+} from './utils/variables';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  //@ts-ignore
+
   link: createUploadLink({
-    uri: "http://localhost:5000/graphql",
+    uri: `${GRAPHQL_URL}/graphql`,
   }),
 });
 

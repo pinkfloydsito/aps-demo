@@ -28,11 +28,12 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     uploads: (parent, args) => {
+    /* TODO: Handle pictures with users in query */
       return Picture.find({});
     },  },
   Mutation: {
+    /* TODO: Handle pictures with users, stop allowing anybody to upload images */
     singleUpload: (parent, args) => {
-      console.info(parent, args)
       return args.file.then(file => {
         const { filename } = file;
         const stream = file.createReadStream()

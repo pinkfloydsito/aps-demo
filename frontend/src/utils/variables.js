@@ -1,3 +1,4 @@
+// TODO: move this to the .env
 const GRAPHQL_URL = `http://localhost:5000`;
 const STATIC_URL = `http://localhost:5000/static/`;
 

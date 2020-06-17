@@ -65,7 +65,7 @@ export default function ImageGrid({ saved, setSaved }) {
   return (
     <div className={classes.root}>
       <GridList className={classes.gridList}
-                spacing={15} cellHeight={400}
+               spacing={15} cellHeight={400}
                 cols={2.5}>
         {images.map((tile, i) => (
           <GridListTile key={i}>

@@ -48,7 +48,7 @@ const resolvers = {
       const decoded = decodedToken(req);
 
       // user is authenticated
-      return await User.findOne({ id: decoded.id })
+      return await User.findById(decoded.id)
     }
   },
   Mutation: {
@@ -69,7 +69,6 @@ const resolvers = {
         },
     async login (_, { email, password }) {
       const user = await User.findOne({ email })
-      
     if (!user) {
       throw new Error('No user with that email')
     }

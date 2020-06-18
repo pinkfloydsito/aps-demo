@@ -25,17 +25,17 @@ const store = configureStore({})
 
 const App = () => {
   return (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <ApolloProvider client={client}>
-        <MuiThemeProvider theme={theme}>
-          <div className="App">
-            <Routes />
-          </div>
-        </MuiThemeProvider>
-      </ApolloProvider>
-    </ConnectedRouter>
-  </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <MuiThemeProvider theme={theme}>
+            <div className="App">
+              <Routes />
+            </div>
+          </MuiThemeProvider>
+        </ConnectedRouter>
+      </Provider>
+    </ApolloProvider>
   );
 }
 

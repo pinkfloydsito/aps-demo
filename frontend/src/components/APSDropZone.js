@@ -9,10 +9,13 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import {useDropzone} from 'react-dropzone'
 import RootRef from '@material-ui/core/RootRef'
+import * as authDuck from "../redux/ducks/auth.duck";
+
+import { useDispatch } from "react-redux";
 
 import ImageGrid from './ImageGrid';
 
-const { useMutation } = require('@apollo/react-hooks');
+const { useMutation, useQuery } = require('@apollo/react-hooks');
 const gql = require('graphql-tag');
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +46,18 @@ const MUTATION = gql`
   }
 `;
 
+const Q_ME = gql`
+query me {
+   me{
+     id
+     username
+     email
+  }
+}`;
+
 const PaperDropzone = () => {
+
+  const dispatch = useDispatch()
   const [saved, setSaved] = useState(false);
 
   const {
@@ -59,8 +73,16 @@ const PaperDropzone = () => {
   })
   const {ref, ...rootProps} = getRootProps()
   const [mutate] = useMutation(MUTATION);
+  const { loading, error, data, refetch } = useQuery(Q_ME);
+
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
+
+  useEffect(() => {
+    if(loading === false) {
+      dispatch(authDuck.actions.setUser( { ...data.me }));
+    }
+  }, [loading]);
 
   return(
     <Grid container className={classes.root} spacing={2}>

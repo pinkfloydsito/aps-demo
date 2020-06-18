@@ -1,4 +1,5 @@
-import { put, takeLatest } from "redux-saga/effects";
+import { put, takeLatest, takeEvery, select, call } from "redux-saga/effects";
+import Storage from '../../utils/Storage';
 
 export const actionTypes = {
   SetUser: "[SetUser] Action",
@@ -10,16 +11,18 @@ const initialAuthState = {
   user: undefined,
 };
 
-
 export const reducer = (state = initialAuthState, action) => {
   switch (action.type) {
     case actionTypes.SetUser:
+    const token = Storage.get('token')
+
     return {
       ...state,
-      user : {...state.user , ...action.payload }
+      user : {...state.user , ...action.payload, token }
     }
 
     case actionTypes.SetToken:
+    Storage.set('token', action.payload.token)
     return {
       ...state,
       user : {...state.user , ...action.payload }
@@ -47,5 +50,4 @@ export const actions = {
   logout: () => ({ type: actionTypes.Logout }),
 };
 
-export function* saga() {
-}
+export function* saga() {}

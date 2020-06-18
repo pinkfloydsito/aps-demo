@@ -12,8 +12,9 @@ export const history = createBrowserHistory()
 
 export default function configureStore(preloadedState) {
   const store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(sagaMiddleware, routerMiddleware))
+    rootReducer(history),
+    preloadedState,
+    composeEnhancers(applyMiddleware(sagaMiddleware, routerMiddleware(history)))
   )
 
   sagaMiddleware.run(rootSaga);

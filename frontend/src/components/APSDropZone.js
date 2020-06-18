@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-  const SOCKET_URL = 'http://localhost:5000'
+const SOCKET_URL = 'http://localhost:5000'
 const MUTATION = gql`
   mutation($file: Upload!) {
     singleUpload(file: $file) {

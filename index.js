@@ -47,17 +47,31 @@ const expressServer = app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 }); 
 
-rabbitMq.on('ready', function () {
-   io.sockets.on('connection', function (socket) {
-      var queue = rabbitMq.queue('my-queue');
+io = require('socket.io').listen(expressServer);
 
-      queue.bind('#'); // all messages
+rabbitMq.on('ready', function (err, connection) {
+  console.info(err)
+ connection.createChannel(function(error1, channel) {
+    if (error1) {
+      throw error1;
+    }
+    var queue = 'hello';
 
-      queue.subscribe(function (message) {
-         socket.emit('message-name', message);
-      });
-   });
+    channel.assertQueue(queue, {
+      durable: false
+    });
+  });
 });
 
 
-io = require('socket.io').listen(expressServer);
+
+
+// io.sockets.on('connection', function (socket) {
+//    var queue = rabbitMq.queue('my-queue');
+
+//    queue.bind('#'); // all messages
+
+//    queue.subscribe(function (message) {
+//       socket.emit('message-name', message);
+//    });
+// });

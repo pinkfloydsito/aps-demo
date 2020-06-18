@@ -47,6 +47,7 @@ export default function ImageGrid({ saved, setSaved }) {
   const classes = useStyles();
   const { loading, error, data, refetch } = useQuery(GET_PICTURES);
 
+  console.info(data, saved)
   useEffect(() => {
     setImages(( data && data.uploads ) || []);
   }, [data]);

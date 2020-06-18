@@ -21,7 +21,7 @@ const authLink = setContext((_, { headers }) => {
   }
 });
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: `${GRAPHQL_URL}/graphql`,
 });
 

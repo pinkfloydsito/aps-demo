@@ -86,6 +86,7 @@ const resolvers = {
       { expiresIn: '1d' }
     )
   },
+
     /* TODO: Handle pictures with users, stop allowing anybody to upload images */
     singleUpload: (parent, args, { req }) => {
       const decoded = decodedToken(req);

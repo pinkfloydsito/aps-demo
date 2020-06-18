@@ -29,6 +29,9 @@ export const reducer = (state = initialAuthState, action) => {
     }
 
     case actionTypes.Logout:
+    try {
+      Storage.unset('token')
+    } catch (err) {} finally {}
     return {
       ...state,
       user : undefined

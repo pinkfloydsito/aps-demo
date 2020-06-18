@@ -55,8 +55,7 @@ query me {
   }
 }`;
 
-const PaperDropzone = () => {
-
+const PaperDropzone = (props) => {
   const dispatch = useDispatch()
   const [saved, setSaved] = useState(false);
 

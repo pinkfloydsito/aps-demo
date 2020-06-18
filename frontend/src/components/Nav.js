@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import * as authDuck from "../redux/ducks/auth.duck";
+import { useApolloClient } from '@apollo/react-hooks';
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -31,6 +32,7 @@ export default function ButtonAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  const client = useApolloClient();
   const authConfig = useSelector(state => state.auth);
 
   const username = (authConfig && authConfig.user && authConfig.user.username) || null;
@@ -45,6 +47,7 @@ export default function ButtonAppBar() {
 
   const handleLogout = () => {
     setAnchorEl(null);
+    client.clearStore()
     dispatch(authDuck.actions.logout());
   };
 

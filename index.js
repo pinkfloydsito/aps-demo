@@ -12,7 +12,10 @@ const apolloServer = new ApolloServer({
   context: req => ({ req }),
 });
 const app = express();
+
 require('dotenv').config();
+var amqp = require('amqp'),
+    rabbitMq = amqp.createConnection({ host: 'localhost' });
 
 const {
   PORT, DB_USER, DB_PASS, DB_URL, JWT_SECRET
@@ -40,6 +43,21 @@ app.use('/static', express.static('files'));
 
 apolloServer.applyMiddleware({ app });
 
-app.listen(PORT, () => {
+const expressServer = app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 }); 
+
+rabbitMq.on('ready', function () {
+   io.sockets.on('connection', function (socket) {
+      var queue = rabbitMq.queue('my-queue');
+
+      queue.bind('#'); // all messages
+
+      queue.subscribe(function (message) {
+         socket.emit('message-name', message);
+      });
+   });
+});
+
+
+io = require('socket.io').listen(expressServer);

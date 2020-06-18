@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import {useDropzone} from 'react-dropzone'
 import RootRef from '@material-ui/core/RootRef'
 import * as authDuck from "../redux/ducks/auth.duck";
+import socketIOClient from "socket.io-client";
 
 import { useDispatch } from "react-redux";
 
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+  const SOCKET_URL = 'http://localhost:5000'
 const MUTATION = gql`
   mutation($file: Upload!) {
     singleUpload(file: $file) {
@@ -82,6 +84,13 @@ const PaperDropzone = (props) => {
       dispatch(authDuck.actions.setUser( { ...data.me }));
     }
   }, [loading]);
+
+  useEffect(() => {
+    const socket = socketIOClient(SOCKET_URL);
+    socket.on("message-name", data => {
+      console.info(data)
+    });
+  }, []);
 
   return(
     <Grid container className={classes.root} spacing={2}>

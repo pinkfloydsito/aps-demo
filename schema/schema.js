@@ -2,6 +2,7 @@ const { ApolloServer, gql } = require('apollo-server');
 const fs = require('fs');
 const jsonwebtoken = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const cloudinary = require('cloudinary').v2;
 
 const User = require('../models/user');
 const Picture = require('../models/picture');
@@ -9,8 +10,14 @@ const Picture = require('../models/picture');
 const { decodedToken } = require('../jwt/decodedToken');
 
 const {
-  JWT_SECRET
+  JWT_SECRET, CLIENT_ID, CLIENT_SECRET, CLOUD_NAME
 } = process.env;
+
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: CLIENT_ID,
+  api_secret: CLIENT_SECRET 
+});
 
 const typeDefs = gql`
   type User {
@@ -95,31 +102,64 @@ const resolvers = {
         id: userId
       } = decoded;
 
-      return args.file.then(file => {
+      return args.file.then(async file => {
         const { filename } = file;
         const stream = file.createReadStream()
 
-        return new Promise((resolve, reject) => {
-          const fstream = fs.createWriteStream(__dirname + '/..' + '/files/' + filename)
-          stream.pipe(fstream)
+        const fileName =  await processUpload(file, userId);
 
-          fstream.on('finish', () => resolve())
-          fstream.on('error', (error) => reject(error))
-          fstream.on('close', function () {
-            return file;
-          });
-        }).then((response) => {
-          let picture = new Picture({
-            ...file,
-            user: userId,
-          });
-          return picture.save();
-        }).catch((err) => {
-          return err;
+        let picture = new Picture({
+          ...file,
+          filename: fileName,
+          user: userId,
         });
+
+        return picture.save();
       });
     },
   }
+};
+
+const processUpload= async ( upload, useId ) => {
+   const { stream } = await upload;
+
+    const cloudinary = require('cloudinary');
+    cloudinary.config(
+        {
+          cloud_name: CLOUD_NAME,
+          api_key: CLIENT_ID,
+          api_secret: CLIENT_SECRET
+        }
+    );
+
+    let resultUrl = '', resultSecureUrl = '';
+
+    const cloudinaryUpload = async ({stream}) => {
+        try {
+            await new Promise((resolve, reject) => {
+                const streamLoad = cloudinary.v2.uploader.upload_stream(function (error, result) {
+                    if (result) {
+                        resultUrl = result.secure_url;
+                        resultSecureUrl = result.secure_url;
+                        resolve(resultUrl)
+                    } else {
+                        reject(error);
+                    }
+                });
+
+                stream.pipe(streamLoad);
+            });
+        }
+        catch (err) {
+          console.info(err)
+            throw new Error(`Failed to upload profile picture ! Err:${err.message}`);
+        }
+    };
+
+    await cloudinaryUpload({stream});
+
+    return resultUrl
+
 };
 
 module.exports = {

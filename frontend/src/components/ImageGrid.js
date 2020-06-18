@@ -70,7 +70,7 @@ export default function ImageGrid({ saved, setSaved }) {
                 cols={2.5}>
         {images.map((tile, i) => (
           <GridListTile key={i}>
-            <img src={`${STATIC_URL}${tile.filename}`} alt={tile.filename} />
+            <img src={`${tile.filename}`} alt={tile.filename} />
             <GridListTileBar
               title={tile.filename}
               classes={{
